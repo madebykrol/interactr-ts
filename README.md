@@ -15,6 +15,11 @@ There are 3 main components related to building applications using InteractR
 2. Interactor
 3. Output (OutputPort)
 
+Then there are the
+1. Interactor Hub
+2. Pipeline middleware
+3. Resolver
+
 When a use case is executed through the interactor hub. You pass in input (extension of UseCase) and a presenter (implementation of OutputPort)
 The interactor then uses the inputdata to orchestrate some services, and eventually outputs data through the outputport.
 
@@ -61,12 +66,41 @@ abstract class MyOutputPort {
 ```typescript
 class MyUseCaseInteractor implements Interactor<MyUseCase, MyOutputPort> {
   execute(usecase: MyUseCase, outputPort: MyOutputPort): UseCaseResult{
-    outputPort.displayFullName(usecase.firstname + ' ' +usecase.lastname);
+    outputPort.displayFullName(usecase.firstname + ' ' + usecase.lastname);
   }
 }
 ```
+### Hub
+The interactor hub is the thing that makes InteractR work. It introduces a level of indirection to your application where interactors won't be called directly. They can. But they should not be.
+It exposes a public method "execute" that takes a usecase and a outputport as parameters and outputs a UseCaseResult.
+
+Typically you inject an instance of "Hub" into your components or controllers and then execute a usecase.
+
+```typescript
+class MyComponent extends Component {
+  constructor(private interactor: Hub, /* other params */) {}
+}
+```
+
+### Middleware
+InteractR supports middleware pipelines. This means that 
+
+### Resolver
 
 ## Registrating the usecase
 
 ## Executing the usecase
 
+```typescript
+class MyComponent extends Component {
+  constructor(private interactor: Hub, /* other params */) {}
+
+  onLoginClick(): void {
+    this.presenter.setComponent(this);
+
+    this.interactor.execute(new LoginUseCase(username, password), presenter);
+
+    this.presenter.present();
+  }
+}
+```
