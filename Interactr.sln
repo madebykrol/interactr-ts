@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "Interactr", "Interactr.njsproj", "{DE60E1FC-EAC5-4E6E-8C99-C2A77780001D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC4B989-1E06-404C-AB46-0EB7FF7A6F69}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.npmignore = .npmignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE60E1FC-EAC5-4E6E-8C99-C2A77780001D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE60E1FC-EAC5-4E6E-8C99-C2A77780001D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE60E1FC-EAC5-4E6E-8C99-C2A77780001D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE60E1FC-EAC5-4E6E-8C99-C2A77780001D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BA16481A-BCE1-4344-B80A-E5E9302AFB22}
+	EndGlobalSection
+EndGlobal

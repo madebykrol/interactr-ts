@@ -1,0 +1,11 @@
+node_modules
+interactr.njsproj
+interactr.njsproj.user
+interactr.sln
+obj
+bin
+.vs
+.git
+.gitattributes
+app.ts
+tsconfig.json

@@ -1,0 +1,17 @@
+{
+  "name": "interactr",
+  "version": "0.0.2",
+  "description": "Interactr",
+  "main": "app.js",
+  "author": {
+    "name": "Kristoffer Olsson"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.14",
+    "typescript": "^3.2.2"
+  }
+}
