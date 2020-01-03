@@ -6,17 +6,11 @@ import { Interactor } from './interactor';
 
 import { InteractorHub } from './interactor.hub';
 
-abstract class AbstractFooOutputPort {
+abstract class AbstractFooOutputPort {}
 
-}
+class FooOutputPort implements AbstractFooOutputPort {}
 
-class FooOutputPort implements AbstractFooOutputPort{
-
-}
-
-class FooUseCase extends UseCase<AbstractFooOutputPort> {
-
-}
+class FooUseCase extends UseCase<AbstractFooOutputPort> {}
 
 class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
   execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): UseCaseResult {

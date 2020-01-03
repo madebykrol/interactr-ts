@@ -97,10 +97,32 @@ class MyUseCaseMiddleware implements Middleware<MyUseCase, MyOutputPort> {
 ```
 
 ### Resolver
+When a use case is executed the interactor is resolved through a resolver.
+Either you can use the SelfContainedResolver where you register both Middleware and Interactors as instances or a resolver that uses a dependency injection container to resolve the instances. 
+These are then called based on what Usecase you execute.
 
-## Registrating a usecase
+```typescript
+let resolver = new SelfContainedResolver();
+
+let interactorHub = new InteractorHub(resolver);
+
+interactorHub.execute(new MyUseCase(), new MyUseCaseOutputPortImpl());
+```
+
+
+## Registrating a interactor
+Depending on what resolving strategy you might choose, the registration will be different. For example if your resolver uses a dependency injection container the instances will be resoler through that.
+But the resolver that is part of the package exposes public methods to register Middlewere and Interactors and will contain instances of interactors and middleware within it self.
+
+### SelfContainedResolver
+```typescript
+let resolver = new SelfContainedResolver();
+
+resolver.registerInteractor(new MyUseCaseInteractor(), MyUseCase);
+```
 
 ## Registrating middleware
+You register middleware in the same way as interactors.
 
 ## Executing a usecase
 
@@ -116,4 +138,75 @@ class MyComponent extends Component {
     this.presenter.present();
   }
 }
+```
+
+## Example code (app.ts)
+```typescript
+import { SelfContainedResolver } from './selfcontained.resolver';
+import { UseCase } from './usecase';
+import { UseCaseResult } from './usecase.result';
+import { Middleware } from './middleware';
+import { Interactor } from './interactor';
+
+import { InteractorHub } from './interactor.hub';
+
+abstract class AbstractFooOutputPort {}
+
+class FooOutputPort implements AbstractFooOutputPort {}
+
+class FooUseCase extends UseCase<AbstractFooOutputPort> {}
+
+class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
+  execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): UseCaseResult {
+    console.log("WHoop");
+
+    return new UseCaseResult(true);
+  }
+}
+
+class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+    console.log("Before interactor 1");
+
+    var result = next(usecase, outputPort);
+
+    console.log("After interactor 1");
+
+    return result;
+  }
+}
+
+class FooMiddleware2 implements Middleware<FooUseCase, AbstractFooOutputPort> {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+    console.log("Before interactor 2");
+
+    var result = next(usecase, outputPort);
+
+    console.log("After interactor 2");
+
+    return result;
+  }
+}
+
+class FooMiddleware3 implements Middleware<FooUseCase, AbstractFooOutputPort> {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+    console.log("Terminate pipeline");
+    return new UseCaseResult(false);
+  }
+}
+
+
+var resolver = new SelfContainedResolver();
+
+resolver.registerInteractor(new FooInteractor(), FooUseCase);
+resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
+resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
+// resolver.registerMiddleware(new FooMiddleware3(), FooUseCase); // With this middleware registrered the interactor won't execute
+
+var hub = new InteractorHub(resolver);
+
+var result = hub.execute(new FooUseCase(), new FooOutputPort());
+
+console.log(result.success);
+
 ```
