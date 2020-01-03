@@ -83,13 +83,26 @@ class MyComponent extends Component {
 ```
 
 ### Middleware
-InteractR supports middleware pipelines. This means that 
+InteractR supports middleware pipelines. This means that you can register one or more middlewares to the execution pipeline, that will execute in the order of registration before and after the interactor executes.
+When a Middleware executes it can choose to keep the execution flow by invoking the next delegate function or terminate the pipeline by just returning without invoking next.
+
+```typescript
+class MyUseCaseMiddleware implements Middleware<MyUseCase, MyOutputPort> {
+  run(usecase: MyUseCase, outputPort: MyOutputPort, next) {
+    // Do something before next middleware / interactor
+    next(usecase, outputPort);
+    // Do something after
+  }
+}
+```
 
 ### Resolver
 
-## Registrating the usecase
+## Registrating a usecase
 
-## Executing the usecase
+## Registrating middleware
+
+## Executing a usecase
 
 ```typescript
 class MyComponent extends Component {
