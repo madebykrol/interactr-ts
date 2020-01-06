@@ -2,8 +2,7 @@ import { Resolver } from './resolver';
 import { Registrator } from './registrator';
 import { Interactor } from './interactor';
 import { UseCase } from "./usecase";
-import { Middleware } from './middleware';
-import { GlobalMiddleware } from "middleware";
+import { Middleware, GlobalMiddleware } from './middleware';
 
 export class SelfContainedResolver implements Resolver, Registrator {
 
