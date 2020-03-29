@@ -8,6 +8,9 @@ It is designed to separate the business / application specific logic from the pr
 
 The idea is that you could create re-usable application componenets aka use cases that are independenten of infrastructure and presentation specifics.
 
+# Resolvers
+Angular: https://github.com/madebykrol/interactr-ts.ng.resolver/ 
+
 ## Usage - Setting up your first usecase
 
 There are 3 main components related to building applications using InteractR
