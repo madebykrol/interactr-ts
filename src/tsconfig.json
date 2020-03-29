@@ -4,6 +4,7 @@
     "baseUrl": "./",
     "target": "es6",
     "lib": [ "es6" ],
+    "strict":  true,
     "sourceMap": true,
     "paths": {
       "@interactr/*": [ "/*" ]

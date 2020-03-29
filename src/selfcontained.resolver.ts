@@ -11,30 +11,30 @@ export class SelfContainedResolver implements Resolver, Registrator {
   private globalMiddleware: Array<GlobalMiddleware> = new Array();
 
   resolveMiddleware<TUseCase extends UseCase<TOutputPort>, TOutputPort>(usecase: TUseCase): Middleware<TUseCase, TOutputPort>[] {
-    return this.middleware[usecase.constructor.name];
+    return this.middleware.get(usecase.constructor.name) as Array<Middleware<TUseCase, TOutputPort>>;
   }
 
-  resolveInteractor<TUseCase, TOutputPort>(usecase: TUseCase): Interactor<TUseCase, TOutputPort> {
-    return this.interactors[usecase.constructor.name];
+  resolveInteractor<TUseCase extends UseCase<TOutputPort>, TOutputPort>(usecase: TUseCase): Interactor<TUseCase, TOutputPort> {
+    return this.interactors.get(usecase.constructor.name) as Interactor<TUseCase, TOutputPort>;
   }
 
   resolveGlobalMiddleware(): Array<GlobalMiddleware> {
     return this.globalMiddleware;
   }
 
-  registerMiddleware<TUseCase extends UseCase<TOutputPort>, TOutputPort>(middleware: Middleware<TUseCase, TOutputPort>, type: (new () => TUseCase)) {
-    if (this.middleware[type.name] === undefined) {
-      this.middleware[type.name] = new Array();
+  registerMiddleware<TUseCase extends UseCase<TOutputPort>, TOutputPort>(middleware: Middleware<TUseCase, TOutputPort>, type: (new () => TUseCase)):void {
+    if (this.middleware.get(type.name) === undefined) {
+      this.middleware.set(type.name, new Array());
     }
 
-    this.middleware[type.name].push(middleware);
+    (this.middleware.get(type.name) as Array<Middleware<TUseCase, TOutputPort>>).push(middleware);
   }
 
-  registerInteractor<TUseCase extends UseCase<TOutputPort>, TOutputPort>(interactor: Interactor<TUseCase, TOutputPort>, type: (new () => TUseCase)) {
-    this.interactors[type.name] = interactor;
+  registerInteractor<TUseCase extends UseCase<TOutputPort>, TOutputPort>(interactor: Interactor<TUseCase, TOutputPort>, type: (new () => TUseCase)):void {
+    this.interactors.set(type.name, interactor);
   }
 
-  registerGlobalMiddleware(middleware: GlobalMiddleware) {
+  registerGlobalMiddleware(middleware: GlobalMiddleware):void {
     this.globalMiddleware.push(middleware);
   }
 }
