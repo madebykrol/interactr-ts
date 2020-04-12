@@ -1,8 +1,8 @@
-import { Resolver } from './resolver';
-import { Registrator } from './registrator';
-import { Interactor } from './interactor';
-import { UseCase } from "./usecase";
-import { Middleware, GlobalMiddleware } from './middleware';
+import { Resolver } from './Resolver';
+import { Registrator } from './Registrator';
+import { Interactor } from './Interactor';
+import { UseCase } from "./UseCase";
+import { Middleware, GlobalMiddleware } from './Middleware';
 
 export class SelfContainedResolver implements Resolver, Registrator {
 

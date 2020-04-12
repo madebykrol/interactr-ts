@@ -1,4 +1,4 @@
-# Interactr
+# Interactr v2.0.0
 
 > This is a typescript implementation of the C# package with the same name
 > [InteractR](https://www.nuget.org/packages/InteractR/)
@@ -7,6 +7,10 @@ InteractR is a indirection, pipeline and mediation framework inspired by the ide
 It is designed to separate the business / application specific logic from the presentation logic.
 
 The idea is that you could create re-usable application componenets aka use cases that are independenten of infrastructure and presentation specifics.
+
+## Breaking changes in 2.0.0
+1) Interactr library now utilizes "Promises" which makes the calls to hub.execute awaitable.
+2) Changes to the file names has been made to make them consistent to comply with 'forceConsistentCasingInFileNames: true'
 
 ## Usage - Setting up your first usecase
 
@@ -65,7 +69,7 @@ abstract class MyOutputPort {
 
 ```typescript
 class MyUseCaseInteractor implements Interactor<MyUseCase, MyOutputPort> {
-  execute(usecase: MyUseCase, outputPort: MyOutputPort): UseCaseResult{
+  execute(usecase: MyUseCase, outputPort: MyOutputPort): Promise<UseCaseResult>{
     outputPort.displayFullName(usecase.firstname + ' ' + usecase.lastname);
   }
 }
@@ -88,7 +92,7 @@ When a Middleware executes it can choose to keep the execution flow by invoking 
 
 ```typescript
 class MyUseCaseMiddleware implements Middleware<MyUseCase, MyOutputPort> {
-  run(usecase: MyUseCase, outputPort: MyOutputPort, next) {
+  run(usecase: MyUseCase, outputPort: MyOutputPort, next): Promise<UseCaseResult> {
     // Do something before next middleware / interactor
     next(usecase, outputPort);
     // Do something after
@@ -108,7 +112,7 @@ let resolver = new SelfContainedResolver();
 
 let interactorHub = new InteractorHub(resolver);
 
-interactorHub.execute(new MyUseCase(), new MyUseCaseOutputPortImpl());
+await interactorHub.execute(new MyUseCase(), new MyUseCaseOutputPortImpl());
 ```
 
 
@@ -135,7 +139,7 @@ class MyComponent extends Component {
   onLoginClick(): void {
     this.presenter.setComponent(this);
 
-    this.interactor.execute(new LoginUseCase(username, password), presenter);
+    await this.interactor.execute(new LoginUseCase(username, password), presenter);
 
     this.presenter.present();
   }
@@ -144,13 +148,13 @@ class MyComponent extends Component {
 
 ## Example code (app.ts)
 ```typescript
-import { SelfContainedResolver } from './selfcontained.resolver';
-import { UseCase } from './usecase';
-import { UseCaseResult } from './usecase.result';
-import { Middleware, GlobalMiddleware } from './middleware';
-import { Interactor } from './interactor';
+import { SelfContainedResolver } from './SelfContainedResolver';
+import { UseCase } from './UseCase';
+import { UseCaseResult } from './UseCaseResult';
+import { Middleware, GlobalMiddleware } from './Middleware';
+import { Interactor } from './Interactor';
 
-import { InteractorHub } from './interactor.hub';
+import { InteractorHub } from './InteractorHub';
 
 abstract class AbstractFooOutputPort {
   abstract displayMessage(message: string): void;
@@ -163,14 +167,14 @@ class FooOutputPort implements AbstractFooOutputPort {
 class FooUseCase extends UseCase<AbstractFooOutputPort> {}
 
 class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
-  execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): UseCaseResult {
+  async execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): Promise<UseCaseResult> {
     outputPort.displayMessage('Foo? Bar!');
     return new UseCaseResult(true);
   }
 }
 
 class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
-  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
     console.log('Before interactor 1');
 
     var result = next(usecase);
@@ -182,7 +186,7 @@ class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
 }
 
 class FooMiddleware2 implements Middleware<FooUseCase, AbstractFooOutputPort> {
-  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
     console.log('Before interactor 2');
 
     var result = next(usecase);
@@ -194,31 +198,37 @@ class FooMiddleware2 implements Middleware<FooUseCase, AbstractFooOutputPort> {
 }
 
 class FooMiddleware3 implements Middleware<FooUseCase, AbstractFooOutputPort> {
-  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+  async run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
     outputPort.displayMessage('Terminate pipeline');
     return new UseCaseResult(false);
   }
 }
 
 class TerminatingGlobalMiddleware implements GlobalMiddleware {
-  run<T>(usecase: T, next: any): UseCaseResult {
+  async run<T>(usecase: T, next: any): Promise<UseCaseResult> {
     return new UseCaseResult(false);
   }
 }
 
-var resolver = new SelfContainedResolver();
 
-resolver.registerInteractor(new FooInteractor(), FooUseCase);
-resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
-resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
+const run = async () => {
+
+  var resolver = new SelfContainedResolver();
+
+  resolver.registerInteractor(new FooInteractor(), FooUseCase);
+  resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
+  resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
 
 // resolver.registerGlobalMiddleware(new TerminatingGlobalMiddleware()); // This Global middleware will terminate the pipeline
 // resolver.registerMiddleware(new FooMiddleware3(), FooUseCase); // With this middleware registrered the interactor won't execute
 
-var hub = new InteractorHub(resolver);
+  var hub = new InteractorHub(resolver);
 
-var result = hub.execute(new FooUseCase(), new FooOutputPort());
+  var result = await hub.execute(new FooUseCase(), new FooOutputPort());
 
-console.log(result.success);
+  console.log(result.success);
+}
+
+run();
 
 ```

@@ -31,22 +31,22 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="app.ts" />
-    <Content Include="global-middleware.wrapper.ts" />
+    <Content Include="GlobalMiddlewareWrapper.ts" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="hub.ts" />
-    <TypeScriptCompile Include="interactor.hub.ts" />
+    <TypeScriptCompile Include="Hub.ts" />
+    <TypeScriptCompile Include="InteractorHub.ts" />
     <TypeScriptCompile Include="Interactor.ts" />
-    <TypeScriptCompile Include="middleware.ts" />
-    <TypeScriptCompile Include="registrator.ts" />
-    <TypeScriptCompile Include="resolver.ts" />
-    <TypeScriptCompile Include="selfcontained.resolver.ts" />
-    <TypeScriptCompile Include="usecase.result.ts" />
-    <TypeScriptCompile Include="usecase.ts" />
-    <TypeScriptCompile Include="interactor.wrapper.ts" />
+    <TypeScriptCompile Include="Middleware.ts" />
+    <TypeScriptCompile Include="Registrator.ts" />
+    <TypeScriptCompile Include="Resolver.ts" />
+    <TypeScriptCompile Include="SelfContainedResolver.ts" />
+    <TypeScriptCompile Include="UseCaseResult.ts" />
+    <TypeScriptCompile Include="UseCase.ts" />
+    <TypeScriptCompile Include="InteractorWrapper.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

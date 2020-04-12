@@ -1,6 +1,6 @@
-import { Interactor } from './interactor';
-import { Middleware, GlobalMiddleware } from './middleware';
-import { UseCase } from './usecase';
+import { Interactor } from './Interactor';
+import { Middleware, GlobalMiddleware } from './Middleware';
+import { UseCase } from './UseCase';
 
 export abstract class Registrator {
   abstract registerMiddleware<TUseCase extends UseCase<TOutputPort>, TOutputPort>(middleware: Middleware<TUseCase, TOutputPort>, type: (new () => TUseCase)):void;

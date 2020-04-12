@@ -1,15 +1,15 @@
-import { Hub } from './hub';
-import { Resolver } from './resolver';
-import { UseCase } from './usecase';
-import { UseCaseResult } from './usecase.result';
-import { InteractorWrapper } from './interactor.wrapper';
-import { Middleware } from './middleware';
-import { GlobalMiddlewareWrapper } from './global-middleware.wrapper';
+import { Hub } from './Hub';
+import { Resolver } from './Resolver';
+import { UseCase } from './UseCase';
+import { UseCaseResult } from './UseCaseResult';
+import { InteractorWrapper } from './InteractorWrapper';
+import { Middleware } from './Middleware';
+import { GlobalMiddlewareWrapper } from './GlobalMiddlewareWrapper';
 
 export class InteractorHub implements Hub {
   constructor(private resolver: Resolver) {}
 
-  execute<TUseCase extends UseCase<TOutputPort>, TOutputPort>(usecase: TUseCase, outputPort: TOutputPort): UseCaseResult {
+  execute<TUseCase extends UseCase<TOutputPort>, TOutputPort>(usecase: TUseCase, outputPort: TOutputPort): Promise<UseCaseResult> {
     const interactor = this.resolver.resolveInteractor(usecase);
 
     let pipeline = new Array<Middleware<TUseCase, TOutputPort>>()

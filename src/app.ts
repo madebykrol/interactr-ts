@@ -1,10 +1,10 @@
-import { SelfContainedResolver } from './selfcontained.resolver';
-import { UseCase } from './usecase';
-import { UseCaseResult } from './usecase.result';
-import { Middleware, GlobalMiddleware } from './middleware';
-import { Interactor } from './interactor';
+import { SelfContainedResolver } from './SelfContainedResolver';
+import { UseCase } from './UseCase';
+import { UseCaseResult } from './UseCaseResult';
+import { Middleware, GlobalMiddleware } from './Middleware';
+import { Interactor } from './Interactor';
 
-import { InteractorHub } from './interactor.hub';
+import { InteractorHub } from './InteractorHub';
 
 abstract class AbstractFooOutputPort {
   abstract displayMessage(message: string): void;
@@ -17,14 +17,14 @@ class FooOutputPort implements AbstractFooOutputPort {
 class FooUseCase extends UseCase<AbstractFooOutputPort> {}
 
 class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
-  execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): UseCaseResult {
+  async execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): Promise<UseCaseResult> {
     outputPort.displayMessage('Foo? Bar!');
     return new UseCaseResult(true);
   }
 }
 
 class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
-  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
     console.log('Before interactor 1');
 
     var result = next(usecase);
@@ -36,7 +36,7 @@ class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
 }
 
 class FooMiddleware2 implements Middleware<FooUseCase, AbstractFooOutputPort> {
-  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
     console.log('Before interactor 2');
 
     var result = next(usecase);
@@ -48,29 +48,35 @@ class FooMiddleware2 implements Middleware<FooUseCase, AbstractFooOutputPort> {
 }
 
 class FooMiddleware3 implements Middleware<FooUseCase, AbstractFooOutputPort> {
-  run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): UseCaseResult {
+  async run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
     outputPort.displayMessage('Terminate pipeline');
     return new UseCaseResult(false);
   }
 }
 
 class TerminatingGlobalMiddleware implements GlobalMiddleware {
-  run<T>(usecase: T, next: any): UseCaseResult {
+  async run<T>(usecase: T, next: any): Promise<UseCaseResult> {
     return new UseCaseResult(false);
   }
 }
 
-var resolver = new SelfContainedResolver();
 
-resolver.registerInteractor(new FooInteractor(), FooUseCase);
-resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
-resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
+const run = async () => {
+
+  var resolver = new SelfContainedResolver();
+
+  resolver.registerInteractor(new FooInteractor(), FooUseCase);
+  resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
+  resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
 
 // resolver.registerGlobalMiddleware(new TerminatingGlobalMiddleware()); // This Global middleware will terminate the pipeline
 // resolver.registerMiddleware(new FooMiddleware3(), FooUseCase); // With this middleware registrered the interactor won't execute
 
-var hub = new InteractorHub(resolver);
+  var hub = new InteractorHub(resolver);
 
-var result = hub.execute(new FooUseCase(), new FooOutputPort());
+  var result = await hub.execute(new FooUseCase(), new FooOutputPort());
 
-console.log(result.success);
+  console.log(result.success);
+}
+
+run();

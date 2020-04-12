@@ -1,6 +1,6 @@
-import { Interactor } from './interactor';
-import { UseCase } from './usecase';
-import { Middleware, GlobalMiddleware } from './middleware';
+import { Interactor } from './Interactor';
+import { UseCase } from './UseCase';
+import { Middleware, GlobalMiddleware } from './Middleware';
 
 export abstract class Resolver {
   abstract resolveInteractor<TUseCase extends UseCase<TOutputPort>, TOutputPort>(usecase: TUseCase): Interactor<TUseCase, TOutputPort>;
