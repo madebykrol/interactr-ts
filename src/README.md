@@ -1,4 +1,4 @@
-# Interactr v3.0.2
+# Interactr v3.0.3
 
 > This is a typescript implementation of the C# package with the same name
 > [InteractR](https://www.nuget.org/packages/InteractR/)
@@ -7,25 +7,6 @@ InteractR is a indirection, pipeline and mediation framework inspired by the ide
 It is designed to separate the business / application specific logic from the presentation logic.
 
 The idea is that you could create re-usable application componenets aka use cases that are independenten of infrastructure and presentation specifics.
-
-## Updates in 3.0.2
-1) Patches to readme to reflect updates
-2) Patch to default exports in index.ts
-
-## Updates in 3.0.1
-1) Patches to readme to reflect updates
-2) You can now import packages directly from 'interactr'
-
-## Breaking changes in 3.0.0
-1) Filename notations and casings changed. 
-For example ``` import {InteractorHub} from 'interactr/InteractorHub' ``` should now be ```import {InteractorHub} from 'interactr/interactor.hub' ```
-
-## Bug fixes in 3.0.0
-1) The self contained resolver now supports use-cases with constructor parameters.
-
-## Breaking changes in 2.0.0
-1) Interactr library now utilizes "Promises" which makes the calls to hub.execute awaitable.
-2) Changes to the file names has been made to make them consistent to comply with 'forceConsistentCasingInFileNames: true'
 
 ## Usage - Setting up your first usecase
 
@@ -160,6 +141,31 @@ class MyComponent extends Component {
   }
 }
 ```
+
+## Update history
+### 3.0.x
+#### Breaking changes in 3.0.0
+1) Filename notations and casings changed. 
+For example ``` import {InteractorHub} from 'interactr/InteractorHub' ``` should now be ```import {InteractorHub} from 'interactr/interactor.hub' ```
+
+#### Bug fixes in 3.0.0
+1) The self contained resolver now supports use-cases with constructor parameters.
+
+#### Minor Updates in 3.0.1
+1) Patches to readme to reflect updates
+2) You can now import packages directly from 'interactr'
+
+#### Minor Updates in 3.0.2
+1) Patches to readme to reflect updates
+2) Patch to default exports in index.ts
+
+#### Minor updates in 3.0.3
+1) Patches to readme 
+
+### 2.0.x
+#### Breaking changes in 2.0.0
+1) Interactr library now utilizes "Promises" which makes the calls to hub.execute awaitable.
+2) Changes to the file names has been made to make them consistent to comply with 'forceConsistentCasingInFileNames: true'
 
 ## Example code (example.ts)
 ```typescript
