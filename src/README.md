@@ -1,4 +1,4 @@
-# Interactr v2.0.0
+# Interactr v3.0.2
 
 > This is a typescript implementation of the C# package with the same name
 > [InteractR](https://www.nuget.org/packages/InteractR/)
@@ -8,15 +8,20 @@ It is designed to separate the business / application specific logic from the pr
 
 The idea is that you could create re-usable application componenets aka use cases that are independenten of infrastructure and presentation specifics.
 
-## Breaking changes in 3.0.0
-1) Filename casings changed to align with imports
-## Bug fixes in 3.0.0
-1) The self contained resolver now supports use-cases with constructor parameters.
+## Updates in 3.0.2
+1) Patches to readme to reflect updates
+2) Patch to default exports in index.ts
 
 ## Updates in 3.0.1
-1) Patches to readme
+1) Patches to readme to reflect updates
 2) You can now import packages directly from 'interactr'
 
+## Breaking changes in 3.0.0
+1) Filename notations and casings changed. 
+For example ``` import {InteractorHub} from 'interactr/InteractorHub' ``` should now be ```import {InteractorHub} from 'interactr/interactor.hub' ```
+
+## Bug fixes in 3.0.0
+1) The self contained resolver now supports use-cases with constructor parameters.
 
 ## Breaking changes in 2.0.0
 1) Interactr library now utilizes "Promises" which makes the calls to hub.execute awaitable.
