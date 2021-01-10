@@ -8,6 +8,16 @@ It is designed to separate the business / application specific logic from the pr
 
 The idea is that you could create re-usable application componenets aka use cases that are independenten of infrastructure and presentation specifics.
 
+## Breaking changes in 3.0.0
+1) Filename casings changed to align with imports
+## Bug fixes in 3.0.0
+1) The self contained resolver now supports use-cases with constructor parameters.
+
+## Updates in 3.0.1
+1) Patches to readme
+2) You can now import packages directly from 'interactr'
+
+
 ## Breaking changes in 2.0.0
 1) Interactr library now utilizes "Promises" which makes the calls to hub.execute awaitable.
 2) Changes to the file names has been made to make them consistent to comply with 'forceConsistentCasingInFileNames: true'
@@ -146,17 +156,22 @@ class MyComponent extends Component {
 }
 ```
 
-## Example code (app.ts)
+## Example code (example.ts)
 ```typescript
-import { SelfContainedResolver } from './SelfContainedResolver';
-import { UseCase } from './UseCase';
-import { UseCaseResult } from './UseCaseResult';
-import { Middleware, GlobalMiddleware } from './Middleware';
-import { Interactor } from './Interactor';
+import { SelfContainedResolver } from './selfcontained.resolver';
+import { UseCase } from './usecase';
+import { UseCaseResult } from './usecase.result';
+import { Middleware, GlobalMiddleware } from './middleware';
+import { Interactor } from './interactor';
 
-import { InteractorHub } from './InteractorHub';
+import { InteractorHub } from './interactor.hub';
+import {Hub} from './hub';
 
 abstract class AbstractFooOutputPort {
+  abstract displayMessage(message: string): void;
+}
+
+abstract class AbstractBarOutputPort {
   abstract displayMessage(message: string): void;
 }
 
@@ -168,7 +183,20 @@ class FooUseCase extends UseCase<AbstractFooOutputPort> {}
 
 class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
   async execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): Promise<UseCaseResult> {
-    outputPort.displayMessage('Foo? Bar!');
+    outputPort.displayMessage('Foo?');
+    return new UseCaseResult(true);
+  }
+}
+
+class BarOutputPort implements AbstractBarOutputPort {
+  displayMessage(message: string): void { console.log(message); }
+}
+
+class BarUseCase extends UseCase<AbstractBarOutputPort> {}
+
+class BarInteractor implements Interactor<BarUseCase, AbstractBarOutputPort> {
+  async execute(usecase: BarUseCase, outputPort: AbstractBarOutputPort): Promise<UseCaseResult> {
+    outputPort.displayMessage('Bar!');
     return new UseCaseResult(true);
   }
 }
@@ -216,6 +244,7 @@ const run = async () => {
   var resolver = new SelfContainedResolver();
 
   resolver.registerInteractor(new FooInteractor(), FooUseCase);
+  resolver.registerInteractor(new BarInteractor(), BarUseCase);
   resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
   resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
 
@@ -224,9 +253,12 @@ const run = async () => {
 
   var hub = new InteractorHub(resolver);
 
-  var result = await hub.execute(new FooUseCase(), new FooOutputPort());
+  var fooResult = await hub.execute(new FooUseCase(), new FooOutputPort());
 
-  console.log(result.success);
+  var barResult = await hub.execute(new FooUseCase(), new FooOutputPort());
+
+  console.log(fooResult.success);
+  console.log(barResult.success);
 }
 
 run();

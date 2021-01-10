@@ -11,6 +11,10 @@ abstract class AbstractFooOutputPort {
   abstract displayMessage(message: string): void;
 }
 
+abstract class AbstractBarOutputPort {
+  abstract displayMessage(message: string): void;
+}
+
 class FooOutputPort implements AbstractFooOutputPort {
   displayMessage(message: string): void { console.log(message); }
 }
@@ -19,7 +23,20 @@ class FooUseCase extends UseCase<AbstractFooOutputPort> {}
 
 class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
   async execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): Promise<UseCaseResult> {
-    outputPort.displayMessage('Foo? Bar!');
+    outputPort.displayMessage('Foo?');
+    return new UseCaseResult(true);
+  }
+}
+
+class BarOutputPort implements AbstractBarOutputPort {
+  displayMessage(message: string): void { console.log(message); }
+}
+
+class BarUseCase extends UseCase<AbstractBarOutputPort> {}
+
+class BarInteractor implements Interactor<BarUseCase, AbstractBarOutputPort> {
+  async execute(usecase: BarUseCase, outputPort: AbstractBarOutputPort): Promise<UseCaseResult> {
+    outputPort.displayMessage('Bar!');
     return new UseCaseResult(true);
   }
 }
@@ -67,6 +84,7 @@ const run = async () => {
   var resolver = new SelfContainedResolver();
 
   resolver.registerInteractor(new FooInteractor(), FooUseCase);
+  resolver.registerInteractor(new BarInteractor(), BarUseCase);
   resolver.registerMiddleware(new FooMiddleware(), FooUseCase);
   resolver.registerMiddleware(new FooMiddleware2(), FooUseCase);
 
@@ -75,12 +93,12 @@ const run = async () => {
 
   var hub = new InteractorHub(resolver);
 
-  var result = await hub.execute(new FooUseCase(), new FooOutputPort());
+  var fooResult = await hub.execute(new FooUseCase(), new FooOutputPort());
 
-  console.log(result.success);
+  var barResult = await hub.execute(new FooUseCase(), new FooOutputPort());
+
+  console.log(fooResult.success);
+  console.log(barResult.success);
 }
 
 run();
-
-
-export default {Interactor, InteractorHub, Middleware, GlobalMiddleware, UseCase, UseCaseResult, SelfContainedResolver, Hub};
