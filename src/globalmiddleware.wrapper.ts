@@ -1,6 +1,6 @@
-import { Middleware, GlobalMiddleware } from './Middleware';
-import { UseCase } from './UseCase';
-import { UseCaseResult } from './UseCaseResult';
+import { Middleware, GlobalMiddleware } from './middleware';
+import { UseCase } from './usecase';
+import { UseCaseResult } from './usecase.result';
 
 export class GlobalMiddlewareWrapper<TUseCase extends UseCase<TOutputPort>, TOutputPort> implements Middleware<TUseCase, TOutputPort> {
 

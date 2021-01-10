@@ -1,7 +1,7 @@
-import { Middleware } from './Middleware';
-import { UseCaseResult } from "./UseCaseResult";
-import { Interactor } from './Interactor';
-import { UseCase } from './UseCase';
+import { Middleware } from './middleware';
+import { UseCaseResult } from "./usecase.result";
+import { Interactor } from './interactor';
+import { UseCase } from './usecase';
 
 export class InteractorWrapper<TUseCase extends UseCase<TOutputPort>, TOutputPort> implements Middleware<TUseCase, TOutputPort> {
   constructor(private interactor: Interactor<TUseCase, TOutputPort>, private outputPort: TOutputPort) {  }

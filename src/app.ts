@@ -1,10 +1,11 @@
-import { SelfContainedResolver } from './SelfContainedResolver';
-import { UseCase } from './UseCase';
-import { UseCaseResult } from './UseCaseResult';
-import { Middleware, GlobalMiddleware } from './Middleware';
-import { Interactor } from './Interactor';
+import { SelfContainedResolver } from './selfcontained.resolver';
+import { UseCase } from './usecase';
+import { UseCaseResult } from './usecase.result';
+import { Middleware, GlobalMiddleware } from './middleware';
+import { Interactor } from './interactor';
 
-import { InteractorHub } from './InteractorHub';
+import { InteractorHub } from './interactor.hub';
+import {Hub} from './hub';
 
 abstract class AbstractFooOutputPort {
   abstract displayMessage(message: string): void;
@@ -80,3 +81,6 @@ const run = async () => {
 }
 
 run();
+
+
+export default {Interactor, InteractorHub, Middleware, GlobalMiddleware, UseCase, UseCaseResult, SelfContainedResolver, Hub};

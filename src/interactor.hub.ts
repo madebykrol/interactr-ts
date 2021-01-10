@@ -1,10 +1,10 @@
-import { Hub } from './Hub';
-import { Resolver } from './Resolver';
-import { UseCase } from './UseCase';
-import { UseCaseResult } from './UseCaseResult';
-import { InteractorWrapper } from './InteractorWrapper';
-import { Middleware } from './Middleware';
-import { GlobalMiddlewareWrapper } from './GlobalMiddlewareWrapper';
+import { Hub } from './hub';
+import { Resolver } from './resolver';
+import { UseCase } from './usecase';
+import { UseCaseResult } from './usecase.result';
+import { InteractorWrapper } from './interactor.wrapper';
+import { Middleware } from './middleware';
+import { GlobalMiddlewareWrapper } from './globalmiddleware.wrapper';
 
 export class InteractorHub implements Hub {
   constructor(private resolver: Resolver) {}
