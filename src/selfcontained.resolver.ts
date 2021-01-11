@@ -1,5 +1,5 @@
 import { Resolver } from './resolver';
-import { Registrator } from './registrator';
+import { Constructor, Registrator } from './registrator';
 import { Interactor } from './interactor';
 import { UseCase } from "./usecase";
 import { Middleware, GlobalMiddleware } from './middleware';
@@ -27,7 +27,7 @@ export class SelfContainedResolver implements Resolver, Registrator {
     return this.globalMiddleware;
   }
 
-  registerMiddleware<TUseCase extends UseCase<TOutputPort>, TOutputPort>(middleware: Middleware<TUseCase, TOutputPort>, type: (new (...args: any[]) => TUseCase)):void {
+  registerMiddleware<TUseCase extends UseCase<TOutputPort>, TOutputPort>(middleware: Middleware<TUseCase, TOutputPort>, type: Constructor<TUseCase>):void {
     if (this.middleware.get(type.name) === undefined) {
       this.middleware.set(type.name, new Array());
     }
@@ -35,7 +35,7 @@ export class SelfContainedResolver implements Resolver, Registrator {
     (this.middleware.get(type.name) as Array<Middleware<TUseCase, TOutputPort>>).push(middleware);
   }
 
-  registerInteractor<TUseCase extends UseCase<TOutputPort>, TOutputPort>(interactor: Interactor<TUseCase, TOutputPort>, type: (new (...args: any[]) => TUseCase)):void {
+  registerInteractor<TUseCase extends UseCase<TOutputPort>, TOutputPort>(interactor: Interactor<TUseCase, TOutputPort>, type: Constructor<TUseCase>):void {
     this.interactors.set(type.name, interactor);
   }
 

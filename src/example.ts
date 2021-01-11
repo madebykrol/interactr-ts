@@ -1,11 +1,12 @@
-import { SelfContainedResolver } from './selfcontained.resolver';
-import { UseCase } from './usecase';
-import { UseCaseResult } from './usecase.result';
-import { Middleware, GlobalMiddleware } from './middleware';
-import { Interactor } from './interactor';
-
-import { InteractorHub } from './interactor.hub';
-import {Hub} from './hub';
+import { 
+  Interactor, 
+  InteractorHub, 
+  Middleware, 
+  GlobalMiddleware, 
+  UseCaseResult, 
+  UseCase, 
+  SelfContainedResolver 
+} from './';
 
 abstract class AbstractFooOutputPort {
   abstract displayMessage(message: string): void;
@@ -19,7 +20,11 @@ class FooOutputPort implements AbstractFooOutputPort {
   displayMessage(message: string): void { console.log(message); }
 }
 
-class FooUseCase extends UseCase<AbstractFooOutputPort> {}
+class FooUseCase extends UseCase<AbstractFooOutputPort> {
+  constructor(public fooParam: string) {
+    super();
+  }
+}
 
 class FooInteractor implements Interactor<FooUseCase, AbstractFooOutputPort> {
   async execute(usecase: FooUseCase, outputPort: AbstractFooOutputPort): Promise<UseCaseResult> {
@@ -43,11 +48,11 @@ class BarInteractor implements Interactor<BarUseCase, AbstractBarOutputPort> {
 
 class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
   run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
-    console.log('Before interactor 1');
+    console.log('Before foo interactor 1');
 
     var result = next(usecase);
 
-    console.log('After interactor 1');
+    console.log('After foo interactor 1');
 
     return result;
   }
@@ -55,11 +60,11 @@ class FooMiddleware implements Middleware<FooUseCase, AbstractFooOutputPort> {
 
 class FooMiddleware2 implements Middleware<FooUseCase, AbstractFooOutputPort> {
   run(usecase: FooUseCase, outputPort: AbstractFooOutputPort, next: any): Promise<UseCaseResult> {
-    console.log('Before interactor 2');
+    console.log('Before foo interactor 2');
 
     var result = next(usecase);
 
-    console.log('After interactor 2');
+    console.log('After foo interactor 2');
 
     return result;
   }
@@ -93,9 +98,9 @@ const run = async () => {
 
   var hub = new InteractorHub(resolver);
 
-  var fooResult = await hub.execute(new FooUseCase(), new FooOutputPort());
+  var fooResult = await hub.execute(new FooUseCase("Foo input"), new FooOutputPort());
 
-  var barResult = await hub.execute(new FooUseCase(), new FooOutputPort());
+  var barResult = await hub.execute(new BarUseCase(), new BarOutputPort());
 
   console.log(fooResult.success);
   console.log(barResult.success);
